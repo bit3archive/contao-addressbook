@@ -97,7 +97,8 @@ class AddressList extends Frontend {
 	}
 	
 	protected function generateByGroup($id) {
-		if ($objGroup = $this->Addressbook->getGroup($id)) {
+		global $objPage;
+		if ($objGroup = $this->Addressbook->getAddressGroup($id)) {
 			$addressTemplate = new FrontendTemplate($this->addressTemplate);
 			$addressTemplate->upath = 'group';
 			$addressTemplate->title = $objGroup->title;
