@@ -67,6 +67,37 @@ CREATE TABLE `tl_address_group` (
 -- --------------------------------------------------------
 
 -- 
+-- Table `tl_address_list`
+-- 
+
+CREATE TABLE `tl_address_list` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `pid` int(10) unsigned NOT NULL default '0',
+  `sorting` int(10) unsigned NOT NULL default '0',
+  `tstamp` int(10) unsigned NOT NULL default '0',
+  `title` varchar(255) NOT NULL default '',
+  `description` blob NULL
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+-- 
+-- Table `tl_address_list_item`
+-- 
+
+CREATE TABLE `tl_address_list_item` (
+  `id` int(10) unsigned NOT NULL auto_increment,
+  `pid` int(10) unsigned NOT NULL default '0',
+  `sorting` int(10) unsigned NOT NULL default '0',
+  `tstamp` int(10) unsigned NOT NULL default '0',
+  `person` int(10) NOT NULL default '0'
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+-- 
 -- Table `tl_company`
 -- 
 
@@ -96,7 +127,8 @@ CREATE TABLE `tl_company` (
 CREATE TABLE `tl_module` (
   `addressListSource` varchar(18) NOT NULL default '',
   `addressSource` int(10) unsigned NOT NULL default '0',
-  `addressTemplate` varchar(64) NOT NULL default ''
+  `addressTemplate` varchar(64) NOT NULL default '',
+  `personTemplate` varchar(64) NOT NULL default '',
   `addressListSort` varchar(20) NOT NULL default '',
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -109,6 +141,7 @@ CREATE TABLE `tl_module` (
 CREATE TABLE `tl_content` (
   `addressListSource` varchar(18) NOT NULL default '',
   `addressSource` int(10) unsigned NOT NULL default '0',
-  `addressTemplate` varchar(64) NOT NULL default ''
+  `addressTemplate` varchar(64) NOT NULL default '',
+  `personTemplate` varchar(64) NOT NULL default '',
   `addressListSort` varchar(20) NOT NULL default '',
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

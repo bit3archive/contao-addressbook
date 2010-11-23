@@ -30,7 +30,8 @@
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_address_group']['title'] = array('Name', 'Geben Sie hier den Namen der Gruppe an.');
+$GLOBALS['TL_LANG']['tl_address_group']['title']       = array('Name', 'Geben Sie hier den Namen der Gruppe an.');
+$GLOBALS['TL_LANG']['tl_address_group']['description'] = array('Beschreibung', 'Geben Sie hier eine Beschreibung der Gruppe an.');
 
 /**
  * Legends

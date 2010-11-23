@@ -28,21 +28,20 @@
 
 
 /**
- * Class ContentAddressList
+ * Class ContentAddressDetails
  *
  * Addressbook listing content element.
  * @copyright  InfinityLabs - Olck & Lins GbR - 2009-2010
  * @author     Tristan Lins <tristan.lins@infinitylabs.de>
  * @package    Addressbook
  */
-class ContentAddressList extends ContentElement {
+class ContentAddressDetails extends ContentElement {
 	
 	/**
 	 * Template
 	 * @var string
 	 */
-	protected $strTemplate = 'ce_addresslist';
-
+	protected $strTemplate = 'ce_addressdetails';
 
 	/**
 	 * Display a wildcard in the back end
@@ -54,7 +53,7 @@ class ContentAddressList extends ContentElement {
 		{
 			$objTemplate = new BackendTemplate('be_wildcard');
 
-			$objTemplate->wildcard = '### ADDRESS LIST ###';
+			$objTemplate->wildcard = '### ADDRESS DETAILS ###';
 			$objTemplate->title = $this->headline;
 			$objTemplate->id = $this->id;
 			$objTemplate->link = $this->name;
@@ -72,14 +71,12 @@ class ContentAddressList extends ContentElement {
 	 */
 	protected function compile()
 	{
-		$this->import('AddressList');
-		$this->AddressList->id = $this->id;
-		$this->AddressList->headline = $this->headline;
-		$this->AddressList->addressListSource = $this->addressListSource;
-		$this->AddressList->addressListSort = $this->addressListSort;
-		$this->AddressList->addressTemplate = $this->addressTemplate;
-		$this->AddressList->personTemplate = $this->personTemplate;
-		$this->Template->content = $this->AddressList->generateContent();
+		$this->import('AddressDetails');
+		$this->AddressDetails->id = $this->id;
+		$this->AddressDetails->headline = $this->headline;
+		$this->AddressDetails->addressSource = $this->addressSource;
+		$this->AddressDetails->personTemplate = $this->personTemplate;
+		$this->Template->content = $this->AddressDetails->generateContent();
 	}
 	
 }

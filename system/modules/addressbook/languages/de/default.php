@@ -30,8 +30,8 @@
 /**
  * Content elements
  */
-$GLOBALS['TL_LANG']['CTE']['address']       = 'Adressbuch';
-$GLOBALS['TL_LANG']['CTE']['addressSingle'] = array('Einzelne Adresse', 'Zeigt eine einzelne Adresse an.');
-$GLOBALS['TL_LANG']['CTE']['addressList']   = array('Adressenliste', 'Zeigt eine Liste von Adressen an.');
+$GLOBALS['TL_LANG']['CTE']['address']         = 'Adressbuch';
+$GLOBALS['TL_LANG']['CTE']['addressDetails']  = array('Einzelne Adresse', 'Zeigt eine einzelne Adresse an.');
+$GLOBALS['TL_LANG']['CTE']['addressList']     = array('Adressenliste', 'Zeigt eine Liste von Adressen an.');
 
 ?>

@@ -379,15 +379,10 @@ class tl_person extends Backend
 	}
 	
 	public function getCompanyName($id) {
-		$id = intval($id);
-		if ($id > 0) {
-			$obj = $this->Database->prepare("SELECT name FROM tl_company WHERE id=?")
-						->limit(1)
-						->execute(intval($id));
-			if ($obj->next() && strlen($obj->name)) {
-				return sprintf('(%s) ', $obj->name);
-			}
-		}
+		$this->import('Addressbook');
+		$name = $this->Addressbook->getCompanyName($id);
+		if (strlen($name))
+			return sprintf('(%s) ', $name);
 		return '';
 	}
 	
@@ -396,11 +391,12 @@ class tl_person extends Backend
 		{
 			return array();
 		}
+		$this->import('Addressbook');
 
 		$arrForms = array();
 		$arrForms['-'] = '-';
 		
-		$objForms = $this->Database->execute("SELECT id, name FROM tl_company ORDER BY name");
+		$objForms = $this->Addressbook->getCompanies();
 
 		while ($objForms->next())
 		{

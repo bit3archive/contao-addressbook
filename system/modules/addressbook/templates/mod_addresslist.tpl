@@ -5,7 +5,7 @@
 
 <<?php echo $this->hl; ?>><?php echo $this->headline; ?></<?php echo $this->hl; ?>>
 <?php endif; ?>
-<?php foreach ($this->entries as $entry) echo $entry; ?> 
+<?php echo $this->content; ?> 
 
 </div>
 <!-- indexer::continue -->

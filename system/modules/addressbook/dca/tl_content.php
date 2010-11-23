@@ -30,8 +30,8 @@
 /**
  * Add palettes to tl_content
  */
-$GLOBALS['TL_DCA']['tl_content']['palettes']['addressList']    = '{type_legend},type,headline;{config_legend},addressListSource,addressListSort;{template_legend:hide},addressTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
-$GLOBALS['TL_DCA']['tl_content']['palettes']['addressSingle']  = '{type_legend},type,headline;{config_legend},addressEntry;{template_legend:hide},addressTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
+$GLOBALS['TL_DCA']['tl_content']['palettes']['addressList']    = '{type_legend},type,headline;{config_legend},addressListSource,addressListSort;{template_legend:hide},addressTemplate,personTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
+$GLOBALS['TL_DCA']['tl_content']['palettes']['addressDetails']  = '{type_legend},type,headline;{config_legend},addressSource;{template_legend:hide},personTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
 
 /**
  * Add fields to tl_content
@@ -50,17 +50,27 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['addressSource'] = array
 	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['addressSource'],
 	'exclude'                 => true,
 	'inputType'               => 'select',
-	'foreignKey'              => 'tl_person.name',
-	'eval'                    => array('multiple'=>true, 'mandatory'=>true, 'tl_class'=>'w50')
+	'options_callback'        => array('tl_content_addressbook', 'getSources'),
+	'eval'                    => array('mandatory'=>true, 'tl_class'=>'w50')
 );
 
 $GLOBALS['TL_DCA']['tl_content']['fields']['addressTemplate'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['addressTemplate'],
-	'default'                 => 'address_full',
+	'default'                 => 'address_list',
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options'                 => $this->getTemplateGroup('address_'),
+	'eval'                    => array('tl_class'=>'w50')
+);
+
+$GLOBALS['TL_DCA']['tl_content']['fields']['personTemplate'] = array
+(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['personTemplate'],
+	'default'                 => 'person_full',
+	'exclude'                 => true,
+	'inputType'               => 'select',
+	'options'                 => $this->getTemplateGroup('person_'),
 	'eval'                    => array('tl_class'=>'w50')
 );
 
@@ -104,11 +114,26 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['addressListSort'] = array
 );
 
 class tl_content_addressbook extends Backend {
-	function getListSources() {
+	private function addListItems(&$array, $list, $indent = 0) {
+		$strIndent = '';
+		for ($i=0; $i<$indent; $i++) $strIndent .= '&nbsp;&nbsp;&nbsp;&nbsp;';
+		$array['list:'.$list->id] = $strIndent . $list->title;
+		if ($list->children) {
+			foreach ($list->children as $children) {
+				$this->addListItems($array, $children, $indent+1);
+			}
+		}	
+	}
+	
+	public function getListSources() {
 		$this->import('Addressbook');
 		
+		$lists = array();
 		$groups = array();
 		$companies = array();
+		
+		$list = $this->Addressbook->getListStructure();
+		$this->addListItems($lists, $list);
 		
 		$objGroup = $this->Addressbook->getAddressGroups();
 		while ($objGroup->next())
@@ -119,9 +144,28 @@ class tl_content_addressbook extends Backend {
 			$companies['company:'.$objCompany->id] = $objCompany->name;
 		
 		return array(
+			$GLOBALS['TL_LANG']['tl_content']['list'] => $lists,
 			$GLOBALS['TL_LANG']['tl_content']['group'] => $groups,
 			$GLOBALS['TL_LANG']['tl_content']['company'] => $companies
 		);
+	}
+	
+	public function getSources() {
+		$this->import('Addressbook');
+		
+		$groups = array('0' => '-');
+		
+		$objGroup = $this->Addressbook->getAddressGroups();
+		while ($objGroup->next()) {
+			$children = array();
+			$objPerson = $this->Addressbook->getPersonsByGroup($objGroup->id);
+			while ($objPerson->next()) {
+				$children[$objPerson->id] = (strlen($objPerson->title) ? sprintf('<strong>%s</strong> ', $objPerson->title) : '') . $objPerson->name;
+			}
+			$groups[$objGroup->title] = $children;
+		}
+		
+		return $groups;
 	}
 }
 ?>

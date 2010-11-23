@@ -1,4 +1,4 @@
-<div class="address_full block">
+<div class="person_full block">
 <?php if ($this->photo): ?><div class="photo float_right"><img src="<?php echo $this->photo ?>" alt="<?php echo $this->name ?>" /></div><?php endif; ?>
 <h5><?php if ($this->title): ?><strong><?php echo $this->title; ?></strong> <?php endif; ?><?php echo $this->name ?></h5>
 
@@ -52,6 +52,13 @@
 <?php if ($this->stayfriends): ?><div class="stayfriends">StayFriends: <?php echo $this->stayfriends ?></div><?php endif; ?>
 <?php if ($this->wkw): ?><div class="wkw">Wer kennt Wen?: <?php echo $this->wkw ?></div><?php endif; ?>
 <?php if ($this->twitter): ?><div class="twitter">Twitter?: <?php echo $this->twitter ?></div><?php endif; ?>
+</div>
+<?php endif; ?>
+
+<?php if (strlen($this->previous . $this->next)): ?>
+<div class="buttons floatbox">
+<?php if (strlen($this->next)): ?><div class="next float_right"><a href="<?php echo $this->next ?>">Nächste Person</a></div><?php endif; ?>
+<?php if (strlen($this->previous)): ?><div class="previous float_left"><a href="<?php echo $this->previous ?>">Vorherige Person</a></div><?php endif; ?>
 </div>
 <?php endif; ?>
 </div>

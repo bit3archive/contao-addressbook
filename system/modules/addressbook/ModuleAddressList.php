@@ -72,21 +72,14 @@ class ModuleAddressList extends Module {
 	 */
 	protected function compile()
 	{
-		$this->import('Addressbook');
-		if ($objPerson = $this->Addressbook->getPersons($this->addressListSource, $this->addressListSort)) {
-			$objTemplate = new FrontendTemplate($this->addressTemplate);
-			
-			$parsed = array();
-			while ($objPerson->next()) {
-				$objTemplate->setData($objPerson->row());
-				$objTemplate->group = (object)$this->Addressbook->getAddressGroup($objTemplate->pid)->row();
-				if ($objTemplate->company)
-					$objTemplate->company = (object)$this->Addressbook->getCompany($objTemplate->company)->row();
-				$parsed[] = $objTemplate->parse();
-			}
-			
-			$this->Template->entries = $parsed;
-		}
+		$this->import('AddressList');
+		$this->AddressList->id = $this->id;
+		$this->AddressList->headline = $this->headline;
+		$this->AddressList->addressListSource = $this->addressListSource;
+		$this->AddressList->addressListSort = $this->addressListSort;
+		$this->AddressList->addressTemplate = $this->addressTemplate;
+		$this->AddressList->personTemplate = $this->personTemplate;
+		$this->Template->content = $this->AddressList->generateContent();
 	}
 	
 }

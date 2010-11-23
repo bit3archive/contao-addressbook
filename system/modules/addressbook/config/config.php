@@ -38,6 +38,10 @@ $GLOBALS['BE_MOD'] = array_merge(
 				'tables' => array('tl_address_group', 'tl_person'),
 				'icon'   => 'system/modules/addressbook/html/group.png'
 			),
+			'address_list' => array(
+				'tables' => array('tl_address_list_item', 'tl_address_list'),
+				'icon'   => 'system/modules/addressbook/html/list.png'
+			),
 			'company' => array(
 				'tables' => array('tl_company'),
 				'icon'   => 'system/modules/addressbook/html/company.png'
@@ -51,16 +55,16 @@ $GLOBALS['BE_MOD'] = array_merge(
  * Content elements
  */
 $GLOBALS['TL_CTE']['address'] = array(
-#	'addressSingle' => 'ContentAddress',
-	'addressList'   => 'ContentAddressList'
+	'addressDetails' => 'ContentAddressDetails',
+	'addressList'    => 'ContentAddressList'
 );
 
 /**
  * Front end modules
  */
 $GLOBALS['FE_MOD']['address'] = array(
-#	'addressSingle' => 'ModuleAddress',
-	'addressList'   => 'ModuleAddressList'
+	'addressDetails' => 'ModuleAddressDetails',
+	'addressList'    => 'ModuleAddressList'
 );
  
 ?>

@@ -30,8 +30,8 @@
 /**
  * Add palettes to tl_module
  */
-$GLOBALS['TL_DCA']['tl_module']['palettes']['addressList']    = '{title_legend},name,headline,type;{config_legend},addressListSource,addressListSort;{template_legend:hide},addressTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['addressSingle']  = '{title_legend},name,headline,type;{config_legend},addressEntry;{template_legend:hide},addressTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['addressList']    = '{title_legend},name,headline,type;{config_legend},addressListSource,addressListSort;{template_legend:hide},addressTemplate,personTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['addressSingle']  = '{title_legend},name,headline,type;{config_legend},addressEntry;{template_legend:hide},addressTemplate,personTemplate;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID,space';
 
 /**
  * Add fields to tl_module
@@ -57,10 +57,20 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['addressSource'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['addressTemplate'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['addressTemplate'],
-	'default'                 => 'address_full',
+	'default'                 => 'address_list',
 	'exclude'                 => true,
 	'inputType'               => 'select',
 	'options'                 => $this->getTemplateGroup('address_'),
+	'eval'                    => array('tl_class'=>'w50')
+);
+
+$GLOBALS['TL_DCA']['tl_module']['fields']['personTemplate'] = array
+(
+	'label'                   => &$GLOBALS['TL_LANG']['tl_module']['personTemplate'],
+	'default'                 => 'person_full',
+	'exclude'                 => true,
+	'inputType'               => 'select',
+	'options'                 => $this->getTemplateGroup('person_'),
 	'eval'                    => array('tl_class'=>'w50')
 );
 

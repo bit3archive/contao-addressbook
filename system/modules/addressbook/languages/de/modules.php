@@ -32,14 +32,15 @@
  */
 $GLOBALS['TL_LANG']['MOD']['address']       = 'Adressbuch';
 $GLOBALS['TL_LANG']['MOD']['person']        = array('Personeneinträge', 'Personeneinträge verwalten.');
-$GLOBALS['TL_LANG']['MOD']['address_group'] = array('Adressgruppen', 'Adressgruppen und Personeneinträge verwalten.');
+$GLOBALS['TL_LANG']['MOD']['address_group'] = array('Adressen', 'Adressgruppen und Personeneinträge verwalten.');
+$GLOBALS['TL_LANG']['MOD']['address_list']  = array('Listen', 'Adressgruppen und Personeneinträge in Listen verwalten.');
 $GLOBALS['TL_LANG']['MOD']['company']       = array('Unternehmen', 'Unternehmen verwalten.');
 
 /**
  * Front end modules
  */
-$GLOBALS['TL_LANG']['FMD']['address'] = 'Adressbuch'; 
-$GLOBALS['TL_LANG']['FMD']['addressSingle'] = array('Einzelne Adresse', 'Zeigt eine einzelne Adresse an.');
-$GLOBALS['TL_LANG']['FMD']['addressList'] = array('Adressenliste', 'Zeigt eine Liste von Adressen an.');
+$GLOBALS['TL_LANG']['FMD']['address']         = 'Adressbuch'; 
+$GLOBALS['TL_LANG']['FMD']['addressDetails']  = array('Einzelne Adresse', 'Zeigt eine einzelne Adresse an.');
+$GLOBALS['TL_LANG']['FMD']['addressList']     = array('Adressenliste', 'Zeigt eine Liste von Adressen an.');
 
 ?>

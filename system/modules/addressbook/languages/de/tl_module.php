@@ -31,14 +31,16 @@
  * Fields
  */
 $GLOBALS['TL_LANG']['tl_module']['addressListSource'] = array('Adressen', 'Hier können Sie auswählen, welche Adressen angezeigt werden sollen.');
-$GLOBALS['TL_LANG']['tl_module']['addressListSort'] = array('Sortierung', 'Hier können Sie auswählen, nach welchem Feld die Liste sortiert wird.');
-$GLOBALS['TL_LANG']['tl_module']['addressTemplate'] = array('Adressentemplate', 'Hier können Sie das Adressentemplate auswählen.');
+$GLOBALS['TL_LANG']['tl_module']['addressListSort']   = array('Sortierung', 'Hier können Sie auswählen, nach welchem Feld die Liste sortiert wird.');
+$GLOBALS['TL_LANG']['tl_module']['addressTemplate']   = array('Adressentemplate', 'Hier können Sie das Adressentemplate auswählen.');
+$GLOBALS['TL_LANG']['tl_module']['personTemplate']    = array('Personentemplate', 'Hier können Sie das Personentemplate auswählen.');
 
 /**
  * References
  */
-$GLOBALS['TL_LANG']['tl_module']['group'] = 'Adressgruppen';
-$GLOBALS['TL_LANG']['tl_module']['company'] = 'Unternehmen';
+$GLOBALS['TL_LANG']['tl_module']['list']             = 'Adresslisten';
+$GLOBALS['TL_LANG']['tl_module']['group']            = 'Adressgruppen';
+$GLOBALS['TL_LANG']['tl_module']['company']          = 'Unternehmen';
 $GLOBALS['TL_LANG']['tl_module']['addressSortField'] = array(
 	'sorting' => 'Sortierung',
 	'sex' => 'Geschlecht',
