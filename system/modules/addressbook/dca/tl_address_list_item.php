@@ -38,7 +38,8 @@ $GLOBALS['TL_DCA']['tl_address_list_item'] = array
 	(
 		'dataContainer'               => 'Table',
 		'ptable'                      => 'tl_address_list',
-		'enableVersioning'            => true
+		'enableVersioning'            => true,
+		'onsubmit_callback'           => array(array('tl_address_list_item', 'updateFlatList'))
 	),
 
 	// List
@@ -76,7 +77,7 @@ $GLOBALS['TL_DCA']['tl_address_list_item'] = array
 			'edit' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_address_list_item']['edit'],
-				'href'                => 'table=tl_person',
+				'href'                => 'act=edit',
 				'icon'                => 'edit.gif'
 			),
 			'copy' => array
@@ -128,6 +129,11 @@ $GLOBALS['TL_DCA']['tl_address_list_item'] = array
 );
 
 class tl_address_list_item extends Backend {
+	
+	public function updateFlatList(DataContainer $dc) {
+		$this->import('Addressbook');
+		$this->Addressbook->updateFlatList($dc->activeRecord->pid);
+	}
 	
 	/*
 	 * @param array

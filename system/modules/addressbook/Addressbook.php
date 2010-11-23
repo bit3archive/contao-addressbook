@@ -89,6 +89,37 @@ class Addressbook extends Controller {
 		'title'
 	);
 	
+	public function updateFlatList($id, $inherit = true) {
+		$this->import('Database');
+		$list = array();
+		
+		$objList = $this->Database->prepare('SELECT id,flat FROM tl_address_list WHERE pid = ? ORDER BY sorting')
+								  ->execute($id);
+		while ($objList->next()) {
+			if ($objList->flat)
+				$flat = unserialize($objList->flat);
+			else
+				$flat = $this->updateFlatList($objList->id, false);
+			$list = array_merge($list, $flat);
+		}
+		
+		$objPerson = $this->Database->prepare('SELECT id,pid,person FROM tl_address_list_item WHERE pid = ? ORDER BY sorting')
+									->execute($id);
+		while ($objPerson->next()) {
+			$list[] = $objPerson->row();
+		}
+		
+		$this->Database->prepare('UPDATE tl_address_list SET flat = ? WHERE id = ?')
+					   ->execute(serialize($list), $id);
+		if ($inherit) {
+			$objList = $this->Database->prepare('SELECT pid FROM tl_address_list WHERE id = ?')
+									  ->execute($id);
+			if ($objList->next())
+				$this->updateFlatList($objList->pid);
+		}
+		return $list;
+	}
+	
 	protected function checkSort($sort, $array, $defaultSort) {
 		$sort = explode(',', $sort);
 		$valid = array();
@@ -234,58 +265,50 @@ class Addressbook extends Controller {
 		return $this->walkPersonByGroup($id, $group, $sort, false);
 	}
 	
-	private function walkListWithItems($id, $rootID, $reverse = false) {
-		$objList = $this->Database->prepare('SELECT * FROM (SELECT l1.*, (SELECT COUNT(*) FROM tl_address_list_item i WHERE i.pid = l1.id) as items FROM tl_address_list l1 INNER JOIN tl_address_list l2 ON l2.pid = l1.pid WHERE l2.id = ?) as t WHERE items > 0 ORDER BY sorting' . ($reverse ? ' DESC' : ''))
-								  ->execute($id);
-		while ($objList->next()) {
-			if ($objList->id == $id) {
-				if ($objList->next())
-					return $objList;
-				else
-					return false;
-			}
-		}
-		if ($id != $rootID) {
-			$objList = $this->Database->prepare('SELECT pid FROM tl_address_list WHERE id = ?')
-									  ->execute($id);
-			if ($objList->next())
-				return $this->walkListWithItems($objList->pid, $rootID, $reverse);
-		}
-		return false;
-	}
-	
-	private function walkPersonByList($id, $list, $item, $reverse = false) {
-		$objItem = $this->Database->prepare('SELECT i1.id, i1.pid, i1.person FROM tl_address_list_item i1 INNER JOIN tl_address_list_item i2 ON i2.pid = i1.pid WHERE i2.id = ? ORDER BY i1.sorting' . ($reverse ? ' DESC' : ''))
-								  ->execute($item);
-		while ($objItem->next()) {
-			if ($objItem->id == $item) {
-				if ($objItem->next()) {
-					$person = (Object)$this->getPerson($objItem->person)->row();
-					$person->from = sprintf('list:%s:%s', $list, $objItem->id);
-					return $person;
-				} else if ($objItem->pid != $list) {
-					if ($previousList = $this->walkListWithItems($objItem->pid, $list, $reverse)) {
-						$objItem = $this->Database->prepare('SELECT * FROM tl_address_list_item WHERE pid = ? ORDER BY sorting' . ($reverse ? ' DESC' : '') . ' LIMIT 1')
-												  ->execute($previousList->id);
-												  
-						if ($objItem->next()) {
-							$person = (Object)$this->getPerson($objItem->person)->row();
-							$person->from = sprintf('list:%s:%s', $list, $objItem->id);
-							return $person;
+	private function walkPersonByList($id, $rootID, $list, $reverse = false) {
+		$objList = $this->Database->prepare('SELECT pid,flat FROM tl_address_list WHERE id = ?')
+								  ->execute($list);
+		if ($objList->next()) {
+			$flat = unserialize($objList->flat);
+			if ($reverse)
+				$flat = array_reverse($flat);
+			while (count($flat)) {
+				$n = array_shift($flat);
+				if ($n['person'] == $id) {
+					if (count($flat)) {
+						$n = array_shift($flat);
+						$p = $this->getPerson($n['person']);
+						if ($p) {
+							$p = (Object)$p->row();
+							$p->from = sprintf('list:%s:%s', $rootID, $n['id']);
+							return $p;
 						}
+					} else {
+						break;
 					}
 				}
 			}
+			if ($list != $rootID) {
+				return $this->walkPersonByList($id, $rootID, $objList->pid, $reverse);
+			}
+		}
+	}
+	
+	private function walkPersonByListItem($id, $list, $item, $reverse = false) {
+		$objList = $this->Database->prepare('SELECT l.id FROM tl_address_list l INNER JOIN tl_address_list_item i ON i.pid = l.id WHERE i.id = ?')
+								  ->execute($item);
+		if ($objList->next()) {
+			return $this->walkPersonByList($id, $list, $objList->id, $reverse);
 		}
 		return false;
 	}
 	
 	public function getPreviousPersonByList($id, $list, $item) {
-		return $this->walkPersonByList($id, $list, $item, true);
+		return $this->walkPersonByListItem($id, $list, $item, true);
 	}
 	
 	public function getNextPersonByList($id, $list, $item) {
-		return $this->walkPersonByList($id, $list, $item, false);
+		return $this->walkPersonByListItem($id, $list, $item, false);
 	}
 	
 	public function getPreviousPerson($id, $from, $sort = 'sorting') {

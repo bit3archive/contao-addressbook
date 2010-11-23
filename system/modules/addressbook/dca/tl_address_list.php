@@ -40,6 +40,7 @@ $GLOBALS['TL_DCA']['tl_address_list'] = array
 		'dataContainer'               => 'Table',
 		'ctable'                      => array('tl_address_list_item'),
 		'enableVersioning'            => true,
+		'onsubmit_callback'           => array(array('tl_address_list', 'updateFlatList'))
 	),
 
 	// List
@@ -76,7 +77,7 @@ $GLOBALS['TL_DCA']['tl_address_list'] = array
 			'edit' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_address_list']['edit'],
-				'href'                => 'table=tl_person',
+				'href'                => 'act=edit',
 				'icon'                => 'edit.gif'
 			),
 			'copy' => array
@@ -136,6 +137,11 @@ $GLOBALS['TL_DCA']['tl_address_list'] = array
 );
 
 class tl_address_list extends Backend {
+	
+	public function updateFlatList(DataContainer $dc) {
+		$this->import('Addressbook');
+		$this->Addressbook->updateFlatList($dc->id);
+	}
 	
 	/**
 	 * Add an image to each item in the tree
