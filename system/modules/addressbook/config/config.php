@@ -30,8 +30,9 @@
 /**
  * Back end modules
  */
+$offset = array_search('content', array_keys($GLOBALS['BE_MOD'])) + 1;
 $GLOBALS['BE_MOD'] = array_merge(
-	array_slice($GLOBALS['BE_MOD'], 0, 1),
+	array_slice($GLOBALS['BE_MOD'], 0, $offset),
 	array(
 		'address' => array(
 			'address_group' => array(
@@ -48,7 +49,7 @@ $GLOBALS['BE_MOD'] = array_merge(
 			)
 		)
 	),
-	array_slice($GLOBALS['BE_MOD'], 1)
+	array_slice($GLOBALS['BE_MOD'], $offset)
 );
 
 /**
