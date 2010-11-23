@@ -37,12 +37,23 @@
  */
 class AddressList extends Frontend {
 	
-	protected function generateByListRef(&$list, $rootID = false, $upath = 'root', $level = 1) {
+	protected function getCurrentPerson() {
+		if (!$this->currentPerson) {
+			$person = $this->Input->get('person');
+			if (preg_match('#_(\d+(\:group\:\d+|\:company\:\d+|\:list\:\d+\:\d+)?)$#', $person, $m)) {
+				$this->currentPerson = $m[1];
+			}
+		}
+		return $this->currentPerson;
+	}
+	protected function generateByListRef(&$list, $rootID = false, $upath = 'root', $level = 0) {
 		global $objPage;
 		if ($rootID === false)
 			$rootID = $list->id;
 		$addressTemplate = new FrontendTemplate($this->addressTemplate);
 		$addressTemplate->upath = $upath;
+		$addressTemplate->cupath = '';
+		$addressTemplate->pupath = '';
 		$addressTemplate->level = 'level_' . $level;
 		$addressTemplate->intLevel = $level;
 		$addressTemplate->id = $list->id;
@@ -53,11 +64,14 @@ class AddressList extends Frontend {
 			foreach ($list->children as $child) {
 				$parsed[] = $this->generateByListRef($child, $rootID, $upath . '-' . $list->id, $level + 1);
 			}
+			$addressTemplate->cupath = $upath . '-' . $list->id;
 		}
 		if ($list->persons) {
 			$objTemplate = new FrontendTemplate($this->personTemplate);
+			$currentPerson = $this->getCurrentPerson();
 			foreach ($list->persons as $person) {
 				$objTemplate->setData((array)$person);
+				$objTemplate->active = ($person->id . (strlen($person->from) ? ':' . $person->from : '')) == $currentPerson;
 				$objTemplate->href = $this->generateFrontendUrl($objPage->row(), '/person/' . $person->name . '_' . $person->id . (strlen($person->from) ? ':' . $person->from : ''));
 				if (strlen($from)) {
 					$objTemplate->previous = $this->getPreviousPerson($person->id, $person->from);
@@ -69,7 +83,7 @@ class AddressList extends Frontend {
 				$objTemplate->upath = $upath . '-' . $list->id;
 				$parsed[] = $objTemplate->parse();
 			}
-			
+			$addressTemplate->pupath = $upath . '-' . $list->id;
 		}
 		$addressTemplate->entries = $parsed;
 		return $addressTemplate->parse();
