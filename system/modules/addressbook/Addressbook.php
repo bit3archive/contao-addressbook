@@ -182,13 +182,13 @@ class Addressbook extends Controller {
 	
 	public function getPersonsByCompany($company, $sort = 'sorting') {
 		$this->import('Database');
-		return $this->Database->prepare('SELECT *, CONCAT(\'company:\', ?) as `from` FROM tl_person WHERE company = ? ORDER BY '.$this->checkSort($sort, Addressbook::$personFields, 'sorting'))
+		return $this->Database->prepare('SELECT *, CONCAT(\'company:\', ?) as `from` FROM tl_person WHERE published = 1 AND company = ? ORDER BY '.$this->checkSort($sort, Addressbook::$personFields, 'sorting'))
 							  ->execute($company, $company);
 	}
 	
 	public function getPersonsByGroup($group, $sort = 'sorting') {
 		$this->import('Database');
-		return $this->Database->prepare('SELECT *, CONCAT(\'group:\', ?) as `from` FROM tl_person WHERE pid = ? ORDER BY '.$this->checkSort($sort, Addressbook::$personFields, 'sorting'))
+		return $this->Database->prepare('SELECT *, CONCAT(\'group:\', ?) as `from` FROM tl_person WHERE published = 1 AND pid = ? ORDER BY '.$this->checkSort($sort, Addressbook::$personFields, 'sorting'))
 							  ->execute($group, $group);
 	}
 	
@@ -196,13 +196,13 @@ class Addressbook extends Controller {
 		$this->import('Database');
 		if ($rootID === false)
 			$rootID = $list->id;
-		return $this->Database->prepare('SELECT p.*, CONCAT(\'list:\', ?, \':\', i.id) as `from` FROM tl_person p INNER JOIN tl_address_list_item i ON i.person = p.id WHERE i.pid = ? ORDER BY i.sorting')
+		return $this->Database->prepare('SELECT p.*, CONCAT(\'list:\', ?, \':\', i.id) as `from` FROM tl_person p INNER JOIN tl_address_list_item i ON i.person = p.id WHERE p.published = 1 AND i.pid = ? ORDER BY i.sorting')
 							  ->execute($rootID, $list);
 	}
 	
 	public function getPerson($id) {
 		$this->import('Database');
-		$objPerson = $this->Database->prepare('SELECT * FROM tl_person WHERE id = ?')
+		$objPerson = $this->Database->prepare('SELECT * FROM tl_person WHERE published = 1 AND id = ?')
 									 ->execute($id);
 		if ($objPerson->next())
 			return $objPerson;
