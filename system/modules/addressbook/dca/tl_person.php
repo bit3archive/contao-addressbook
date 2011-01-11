@@ -366,7 +366,7 @@ class tl_person extends Backend
 
 	public function addPerson($arrRow)
 	{
-		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
+		$key = $arrRow['published'] ? 'published' : 'unpublished';
 
 		$s .= '<div class="cte_type ' . $key . '">';
 		if (strlen($arrRow['sex'])) $s .= sprintf('<div style="padding: 1px 0 2px 20px; background: url(system/modules/addressbook/html/%1$s.png) no-repeat scroll left center;"> ', $arrRow['sex']);
