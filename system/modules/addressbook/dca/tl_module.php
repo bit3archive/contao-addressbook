@@ -61,7 +61,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['addressTemplate'] = array
 	'default'                 => 'address_list',
 	'exclude'                 => true,
 	'inputType'               => 'select',
-	'options'                 => $this->getTemplateGroup('address_'),
+	'options_callback'        => array('tl_module_addressbook', 'getAddressTemplates'),
 	'eval'                    => array('tl_class'=>'w50')
 );
 
@@ -71,7 +71,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['personTemplate'] = array
 	'default'                 => 'person_full',
 	'exclude'                 => true,
 	'inputType'               => 'select',
-	'options'                 => $this->getTemplateGroup('person_'),
+	'options_callback'        => array('tl_module_addressbook', 'getPersonTemplates'),
 	'eval'                    => array('tl_class'=>'w50')
 );
 
@@ -133,6 +133,26 @@ class tl_module_addressbook extends Backend {
 			$GLOBALS['TL_LANG']['tl_module']['group'] => $groups,
 			$GLOBALS['TL_LANG']['tl_module']['company'] => $companies
 		);
+	}
+	
+	/**
+	 * Return all templates as array
+	 * @param object
+	 * @return array
+	 */
+	public function getAddressTemplates(DataContainer $dc)
+	{
+		return $this->getTemplateGroup('address_', $dc->activeRecord->pid);
+	}
+	
+	/**
+	 * Return all templates as array
+	 * @param object
+	 * @return array
+	 */
+	public function getPersonTemplates(DataContainer $dc)
+	{
+		return $this->getTemplateGroup('person_', $dc->activeRecord->pid);
 	}
 }
 ?>
