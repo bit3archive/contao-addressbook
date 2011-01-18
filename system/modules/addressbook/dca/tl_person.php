@@ -374,6 +374,7 @@ class tl_person extends Backend
 		$s .= '<strong>' . $arrRow['name'] . '</strong>';
 		if (strlen($arrRow['job'])) $s .= ', ' . $arrRow['job'];
 		if (strlen($arrRow['position'])) $s .= ', ' . $arrRow['position'];
+		if (strlen($arrRow['photo'])) $s .= sprintf('<img src="%s" alt="" style="float: right; margin-left: 10px; box-shadow: 0 0 3px rgba(0,0,0,.5); -o-box-shadow: 0 0 3px rgba(0,0,0,.5); -moz-box-shadow: 0 0 3px rgba(0,0,0,.5); -webkit-box-shadow: 0 0 3px rgba(0,0,0,.5);" />', specialchars($this->getImage($arrRow['photo'], 80, 80, 'box')));
 		if (strlen($arrRow['sex'])) $s .= '</div>';
 		$s .= '</div>' . "\n";
 		return $s;

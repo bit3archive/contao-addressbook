@@ -61,7 +61,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['addressTemplate'] = array
 	'default'                 => 'address_list',
 	'exclude'                 => true,
 	'inputType'               => 'select',
-	'options'                 => $this->getTemplateGroup('address_'),
+	'options_callback'        => array('tl_content_addressbook', 'getAddressTemplates'),
 	'eval'                    => array('tl_class'=>'w50')
 );
 
@@ -71,7 +71,7 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['personTemplate'] = array
 	'default'                 => 'person_full',
 	'exclude'                 => true,
 	'inputType'               => 'select',
-	'options'                 => $this->getTemplateGroup('person_'),
+	'options_callback'        => array('tl_content_addressbook', 'getPersonTemplates'),
 	'eval'                    => array('tl_class'=>'w50')
 );
 
@@ -114,8 +114,47 @@ $GLOBALS['TL_DCA']['tl_content']['fields']['addressListSort'] = array
 	'eval'                    => array('tl_class'=>'w50')
 );
 
-class tl_content_addressbook extends Backend {
-	private function addListItems(&$array, $list, $indent = 0) {
+class tl_content_addressbook extends Backend
+{
+	public function getAddressTemplates(DataContainer $dc)
+	{
+		return $this->getTemplates($dc, 'address');
+	}
+	
+	
+	public function getPersonTemplates(DataContainer $dc)
+	{
+		return $this->getTemplates($dc, 'person');
+	}
+	
+	
+	/**
+	 * Return all templates as array
+	 * @param object
+	 * @return array
+	 */
+	protected function getTemplates(DataContainer $dc, $strPrefix)
+	{	
+		// Get the page ID
+		$objArticle = $this->Database->prepare("SELECT pid FROM tl_article WHERE id=?")
+									 ->limit(1)
+									 ->execute($dc->activeRecord->pid);
+
+		// Inherit the page settings
+		$objPage = $this->getPageDetails($objArticle->pid);
+
+		// Get the theme ID
+		$objLayout = $this->Database->prepare("SELECT pid FROM tl_layout WHERE id=?")
+									->limit(1)
+									->execute($objPage->layout);
+
+		// Return all templates
+		return $this->getTemplateGroup($strPrefix . '_', $objLayout->pid);
+	}
+	
+	
+	private function addListItems(&$array, $list, $indent = 0)
+	{
 		$strIndent = '';
 		for ($i=0; $i<$indent; $i++) $strIndent .= '&nbsp;&nbsp;&nbsp;&nbsp;';
 		$array['list:'.$list->id] = $strIndent . $list->title;
@@ -126,7 +165,9 @@ class tl_content_addressbook extends Backend {
 		}	
 	}
 	
-	public function getListSources() {
+	
+	public function getListSources()
+	{
 		$this->import('Addressbook');
 		
 		$lists = array();
@@ -151,7 +192,9 @@ class tl_content_addressbook extends Backend {
 		);
 	}
 	
-	public function getSources() {
+	
+	public function getSources()
+	{
 		$this->import('Addressbook');
 		
 		$groups = array('0' => '-');
